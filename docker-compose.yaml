@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  flask-segmentation-service:
+    build:
+      context: .
+      dockerfile: flask-segmentation-service/Dockerfile
+    image: flask-segmentation-service:latest
+    container_name: flask-segmentation-service
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./flask-segmentation-service/best_model.pt:/app/best_model.pt
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              count: 1
+
+  flask-titanic-service:
+    build:
+      context: .
+      dockerfile: flask-titanic-service/Dockerfile
+    image: flask-titanic-service:latest
+    container_name: flask-titanic-service
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./flask-titanic-service/model.pkl:/app/model.pkl
+
+  streamlit-web:
+    build:
+      context: .
+      dockerfile: streamlit-service/Dockerfile
+    image: streamlit-service:latest
+    container_name: streamlit-service
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./streamlit-service/streamlit_app.py:/app/streamlit_app.py

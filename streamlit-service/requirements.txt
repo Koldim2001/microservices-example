@@ -1,0 +1,6 @@
+opencv-python
+pillow
+python-io
+requests
+numpy
+streamlit==1.40.1
