@@ -9,6 +9,7 @@ import base64
 # Определение классов и размеров изображения
 CLASSES = ["фон", "волосы", "кожа"]
 
+
 def adjust_hsv(image, mask, h_adjust, s_adjust, v_adjust, index):
     """Корректировка значения HSV на изображении в области, где mask == index."""
     # Преобразование изображения в HSV
@@ -28,9 +29,11 @@ def adjust_hsv(image, mask, h_adjust, s_adjust, v_adjust, index):
     
     return image_rgb_adjusted
 
+
 def display_image(image):
     """Отображение изображения."""
     st.image(image, use_container_width=True)
+
 
 def upload_image(label):
     """Загрузка изображения."""
@@ -47,8 +50,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",)
     
-def image_processing_page():
 
+def image_processing_page():
     st.title('Инструмент корректировки изображений')
 
     # Загрузка изображения
@@ -62,7 +65,7 @@ def image_processing_page():
         v_adjust = st.sidebar.slider('Корректировка освещения (V) (-255 до 255)', -255, 255, 0)
 
         # Выбор значения для изменения в маске с помощью выпадающего списка
-        mask_value = st.sidebar.selectbox('Выберите интересующую область', CLASSES)
+        mask_value = st.sidebar.selectbox('Выберите интересующую область', CLASSES, index=1)
 
         # Ищем индекс значения в списке
         index = CLASSES.index(mask_value)
@@ -91,31 +94,31 @@ def image_processing_page():
             with col2:
                 display_image(adjusted_image)
         else:
-            st.error(f"Request failed with status code {response.status_code}")
+            st.error(f"Запрос завершился с кодом ошибки {response.status_code}")
+
 
 def titanic_prediction_page():
-
     # Заголовок приложения
-    st.title("Titanic Survival Prediction")
+    st.title("Прогнозирование выживания на Титанике")
 
     # Ввод данных
-    st.write("Enter the passenger details:")
+    st.write("Введите данные пассажира:")
 
     # Выпадающее меню для выбора класса билета
-    pclass = st.selectbox("Ticket Class (Pclass)", [1, 2, 3])
+    pclass = st.selectbox("Класс билета (Pclass)", [1, 2, 3])
 
     # Текстовое поле для ввода возраста с проверкой на число
-    age = st.text_input("Age", value=10)
+    age = st.text_input("Возраст", value=10)
     if not age.isdigit():
-        st.error("Please enter a valid number for Age.")
+        st.error("Пожалуйста, введите корректное число для Возраста.")
 
     # Текстовое поле для ввода стоимости билета с проверкой на число
-    fare = st.text_input("Fare", value=100)
+    fare = st.text_input("Стоимость билета", value=100)
     if not fare.isdigit():
-        st.error("Please enter a valid number for Fare.")
+        st.error("Пожалуйста, введите корректное число для Стоимости билета.")
 
     # Кнопка для отправки запроса
-    if st.button("Predict"):
+    if st.button("Предсказать"):
         # Проверка, что все поля заполнены
         if age.isdigit() and fare.isdigit():
             # Подготовка данных для отправки
@@ -131,21 +134,23 @@ def titanic_prediction_page():
             # Проверка статуса ответа
             if response.status_code == 200:
                 prediction = response.json()["prediction"]
-                st.success(f"Prediction: {prediction}")
+                st.success(f"Предсказание: {prediction}")
             else:
-                st.error(f"Request failed with status code {response.status_code}")
+                st.error(f"Запрос завершился с кодом ошибки {response.status_code}")
         else:
-            st.error("Please fill in all fields with valid numbers.")
+            st.error("Пожалуйста, заполните все поля корректными числами.")
+
 
 # Основная функция для выбора страницы
 def main():
-    st.sidebar.title("Navigation")
-    page = st.sidebar.selectbox("Choose a page", ["Image Processing", "Titanic Prediction"])
+    st.sidebar.title("Навигация")
+    page = st.sidebar.selectbox("Выберите страницу", ["Обработка изображений", "Прогноз выживания на Титанике"])
 
-    if page == "Image Processing":
+    if page == "Обработка изображений":
         image_processing_page()
-    elif page == "Titanic Prediction":
+    elif page == "Прогноз выживания на Титанике":
         titanic_prediction_page()
+
 
 if __name__ == '__main__':
     main()
