@@ -38,7 +38,7 @@ def stats():
 
 @app.route('/health', methods=['GET'])
 def health():
-    return jsonify({"status": "OK"})
+    return jsonify({"status": "Alive"})
 
 
 @app.route('/predict_model', methods=['POST'])
